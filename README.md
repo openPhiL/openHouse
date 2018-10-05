@@ -1,2 +1,2 @@
-# HA_Essentials
-Home Automation: Basic Essentials that need to be covered before moving in
+# OpenHouse
+A complete home automation setup around OpenHAB
