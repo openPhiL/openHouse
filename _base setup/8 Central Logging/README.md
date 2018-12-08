@@ -1,11 +1,10 @@
-## Create new server
-Link to Extend a virtual partition: https://www.thomas-krenn.com/de/wiki/LVM_vergr%C3%B6%C3%9Fern
+# Install influxDB and Grafana
+All loggable data should end up centralized in a big database (Here: influxDB) which then can be analyzed using a graphical interface like Grafana. 
 
-
-#Install influxDB and Grafana
+## Create a new virtual machine
+I use another small Ubuntu-Live-Server Instance with 2GB Ram, 1CPU and 20GB Harddisk. I am going to use IP 10.0.0.4 . 
 
 ## Install influxDB:
-
 
     curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
 

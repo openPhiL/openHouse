@@ -23,6 +23,6 @@ https://www.ntop.org/ntopng/ntopng-and-time-series-from-rrd-to-influxdb-new-char
 Go to Grafana and add a data source, selecting influxDB:ntopng 
 
 #  Extract raw Data via Telegraf
-Different way, haven't checked that out yet.
+!Different way, haven't checked that out yet.
 https://sbaronda.com/2016/06/14/logging-pfsense-metrics-to-influxdb/
 

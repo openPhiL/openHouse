@@ -1,4 +1,5 @@
 ## push OpenHab Config to GitLab
+(work in progress)
 Login to the GitLab Webinterface and change your password. Next, we create a menu->group (e.g. openHouse) to collect all things openHouse related. In there, we create a subgroup (e.g. OpenHAB) to collect all things OpenHAB related. In there, we create 2 projects:
 * var_lib_openhab2 
 * etc_openhab2
