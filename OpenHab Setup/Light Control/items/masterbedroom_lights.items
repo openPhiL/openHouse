@@ -1,4 +1,5 @@
 //Groups
+Group G_Masterbedroom
 Group:Switch:OR(ON, OFF)    G_Masterbedroom_Lights_Switches     "Beleuchtung im Elternschlafzimmer"         <light> (G_Masterbedroom,G_Switches)     [ "Lighting" ]     
 Group:Dimmer                G_Masterbedroom_Lights_Dimmer       "Dimmer im Elternschlafzimmer"              <light> (G_Masterbedroom,G_Dimmer)       [ "Lighting" ]      
 Group:Color                 G_Masterbedroom_Lights_Color        "Farbe im Elternschlafzimmer"               <light> (G_Masterbedroom,G_Color)        [ "Lighting" ]         
@@ -7,29 +8,29 @@ Group:Color                 G_Masterbedroom_Lights_Alarm        "Lichtalarm im E
 Group:Color                 G_Masterbedroom_Lights_Effect       "Lichteffekt im Elternschlafzimmer"         <light> (G_Masterbedroom,G_Effect)       [ "Lighting" ]      
 
 //Philips Hue Go 
-Switch	    Masterbedroom_Lights_Bed_PhiL_Switches              "PhiLs Bettlicht"	                        <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_PhiL:color"}
-Dimmer	    Masterbedroom_Lights_Bed_PhiL_Dimmer	            "Dimmer von PhiLs Bettlicht"	            <light> (G_Masterbedroom_Lights_Dimmer)	    [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_PhiL:color"}
-Color	    Masterbedroom_Lights_Bed_PhiL_Color	                "Farbe von PhiLs Bettlicht"	                <light> (G_Masterbedroom_Lights_Color)      [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_PhiL:color"}
-Dimmer	    Masterbedroom_Lights_Bed_PhiL_Colortemp             "Farbtemperatur von PhiLs Bettlicht"	    <light> (G_Masterbedroom_Lights_Colortemp)  [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_PhiL:color_temperature"} 
-Switch	    Masterbedroom_Lights_Bed_PhiL_Effect	            "Lichteffekt von PhiLs Bettlicht"	        <light> (G_Masterbedroom_Lights_Effect)	    [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_PhiL:effect"}
+Switch	    Masterbedroom_Lights_Bed_PhiL_Switches              "PhiLs Bettlicht"	                        <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  
+Dimmer	    Masterbedroom_Lights_Bed_PhiL_Dimmer	            "Dimmer von PhiLs Bettlicht"	            <light> (G_Masterbedroom_Lights_Dimmer)	    [ "Lighting" ] 
+Color	    Masterbedroom_Lights_Bed_PhiL_Color	                "Farbe von PhiLs Bettlicht"	                <light> (G_Masterbedroom_Lights_Color)      [ "Lighting" ]  
+Dimmer	    Masterbedroom_Lights_Bed_PhiL_Colortemp             "Farbtemperatur von PhiLs Bettlicht"	    <light> (G_Masterbedroom_Lights_Colortemp)  [ "Lighting" ] 
+Switch	    Masterbedroom_Lights_Bed_PhiL_Effect	            "Lichteffekt von PhiLs Bettlicht"	        <light> (G_Masterbedroom_Lights_Effect)	    [ "Lighting" ]  
 
 //Philips Hue Go
-Switch	    Masterbedroom_Lights_Bed_Natascha_Switches          "Nataschas Bettlicht"	                    <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_Natascha:color"}
-Dimmer	    Masterbedroom_Lights_Bed_Natascha_Dimmer	        "Dimmer von Nataschas Bettlicht"	        <light> (G_Masterbedroom_Lights_Dimmer)	    [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_Natascha:color"}
-Color	    Masterbedroom_Lights_Bed_Natascha_Color	            "Farbe von Nataschas Bettlicht"	            <light> (G_Masterbedroom_Lights_Color)      [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_Natascha:color"}
-Dimmer	    Masterbedroom_Lights_Bed_Natascha_Colortemp         "Farbtemperatur von Nataschas Bettlicht"    <light> (G_Masterbedroom_Lights_Colortemp)  [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_Natascha:color_temperature"} 
-Switch	    Masterbedroom_Lights_Bed_Natascha_Effect	        "Lichteffekt von Nataschas Bettlicht"       <light> (G_Masterbedroom_Lights_Effect)     [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LLC020_Masterbedroom_Lights_Bed_Natascha:effect"}
+Switch	    Masterbedroom_Lights_Bed_Natascha_Switches          "Nataschas Bettlicht"	                    <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  
+Dimmer	    Masterbedroom_Lights_Bed_Natascha_Dimmer	        "Dimmer von Nataschas Bettlicht"	        <light> (G_Masterbedroom_Lights_Dimmer)	    [ "Lighting" ]  
+Color	    Masterbedroom_Lights_Bed_Natascha_Color	            "Farbe von Nataschas Bettlicht"	            <light> (G_Masterbedroom_Lights_Color)      [ "Lighting" ]  
+Dimmer	    Masterbedroom_Lights_Bed_Natascha_Colortemp         "Farbtemperatur von Nataschas Bettlicht"    <light> (G_Masterbedroom_Lights_Colortemp)  [ "Lighting" ] 
+Switch	    Masterbedroom_Lights_Bed_Natascha_Effect	        "Lichteffekt von Nataschas Bettlicht"       <light> (G_Masterbedroom_Lights_Effect)     [ "Lighting" ]  
 
 //Philips Hue Lightstripe
-Switch	    Masterbedroom_Lights_Ceiling_Switches               "Deckenlicht"	                            <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LST002_Masterbedroom_Lights_Ceiling:color"}
-Dimmer	    Masterbedroom_Lights_Ceiling_Dimmer	                "Dimmer vom Deckenlicht"	                <light> (G_Masterbedroom_Lights_Dimmer)     [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LST002_Masterbedroom_Lights_Ceiling:color"}
-Color	    Masterbedroom_Lights_Ceiling_Color	                "Farbe vom Deckenlicht"	                    <light> (G_Masterbedroom_Lights_Color)      [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LST002_Masterbedroom_Lights_Ceiling:color"}
-Dimmer	    Masterbedroom_Lights_Ceiling_Colortemp              "Farbtemperatur vom Deckenlicht"	        <light> (G_Masterbedroom_Lights_Colortemp)  [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LST002_Masterbedroom_Lights_Ceiling:color_temperature"}
-String	    Masterbedroom_Lights_Ceiling_Alarm	                "Lichtalarm vom Deckenlicht"	            <light> (G_Masterbedroom_Lights_Alarm)      [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LST002_Masterbedroom_Lights_Ceiling:alert"}
-Switch	    Masterbedroom_Lights_Ceiling_Effect	                "Lichteffekt vom Deckenlicht"	            <light> (G_Masterbedroom_Lights_Effect)     [ "Lighting" ]  {channel="hue:0210:0017884a02d8:LST002_Masterbedroom_Lights_Ceiling:effect"}
+Switch	    Masterbedroom_Lights_Ceiling_Switches               "Deckenlicht"	                            <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  
+Dimmer	    Masterbedroom_Lights_Ceiling_Dimmer	                "Dimmer vom Deckenlicht"	                <light> (G_Masterbedroom_Lights_Dimmer)     [ "Lighting" ]  
+Color	    Masterbedroom_Lights_Ceiling_Color	                "Farbe vom Deckenlicht"	                    <light> (G_Masterbedroom_Lights_Color)      [ "Lighting" ]  
+Dimmer	    Masterbedroom_Lights_Ceiling_Colortemp              "Farbtemperatur vom Deckenlicht"	        <light> (G_Masterbedroom_Lights_Colortemp)  [ "Lighting" ]  
+String	    Masterbedroom_Lights_Ceiling_Alarm	                "Lichtalarm vom Deckenlicht"	            <light> (G_Masterbedroom_Lights_Alarm)      [ "Lighting" ]  
+Switch	    Masterbedroom_Lights_Ceiling_Effect	                "Lichteffekt vom Deckenlicht"	            <light> (G_Masterbedroom_Lights_Effect)     [ "Lighting" ]  
 
 //Sonoff Switched lights
-Switch	    Masterbedroom_Lights_Wardrobe_Switches              "Licht in der Garderobe"	                <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  {channel="mqtt broker..."}
+Switch	    Masterbedroom_Lights_Wardrobe_Switches              "Licht in der Garderobe"	                <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ] 
 
 //Sonoff Switched lights
-Switch	    Masterbedroom_Lights_Vanity_Mirror_Switches         "Licht am Schminktisch"	                    <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ]  {channel="mqtt broker..."}
+Switch	    Masterbedroom_Lights_Vanity_Mirror_Switches         "Licht am Schminktisch"	                    <light> (G_Masterbedroom_Lights_Switches)   [ "Lighting" ] 

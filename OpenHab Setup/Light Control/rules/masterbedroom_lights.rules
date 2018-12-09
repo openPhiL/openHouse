@@ -45,7 +45,7 @@ end
 */
 rule "lights when alarm clock is about to go ring"
 when 
-    Item alarm_clock_about_to_go_off changed on ON
+    Item alarm_clock_about_to_go_off changed to ON
 
 then
     //main switch for this rule
@@ -56,17 +56,17 @@ then
     var Color L_morning_light_energetic_stage1 = new HSBType(    
                     new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
                     new PercentType(29), // Saturation 0-100
-                    new PercentType(20)) // Brightness 0-100
+                    new PercentType(20) // Brightness 0-100
                 ).toColor()
     var Color L_morning_light_energetic_stage2 = new HSBType(    
                     new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
                     new PercentType(29), // Saturation 0-100
-                    new PercentType(50)) // Brightness 0-100
+                    new PercentType(50) // Brightness 0-100
                 ).toColor()
     var Color L_morning_light_energetic_stage3 = new HSBType(    
                     new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
                     new PercentType(29), // Saturation 0-100
-                    new PercentType(100)) // Brightness 0-100
+                    new PercentType(100) // Brightness 0-100
                 ).toColor()
 
     //Stage 1 immediately
@@ -96,7 +96,7 @@ end
 */
 rule "vanity lights"
 when 
-    Masterbedroom_Vanity_Chair_Occupied changed
+    Item Masterbedroom_Vanity_Chair_Occupied changed
 
 then
     //main switch for this rule
@@ -114,7 +114,7 @@ end
 */
 rule "wardrobe lights"
 when 
-    Masterbedroom_Wardrobe_Multisensor_Motion changed
+    Item Masterbedroom_Wardrobe_Multisensor_Motion changed
 
 then
     //main switch for this rule
