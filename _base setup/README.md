@@ -11,9 +11,5 @@ Once you made it though all the steps, you have "one" virtual machine that repre
 But that was just the beginning, to warm up they say. After the base setup, you can choose (more or less) freely what features/components you want to add to your home network. If dependencies occure, I hope I will mention that. I guess a good starting point from here on are any of those options:
 
 
-## Configure OpenHAB
-Setting up OpenHAB is done [here](../../OpenHAB%20setup)
 
-## Move to Production
-Ready for production? Check the subsection of hardware [here](../../Server%20Hardware) on how to get your own dedicated VMWare Server, then just restore the backup'ed instances on that server and run them. 
 

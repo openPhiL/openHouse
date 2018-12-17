@@ -1,0 +1,13 @@
+//Groups
+Group G_Doorbird
+
+//Ring is switched on for 3 seconds (using expire binding)
+Switch DoorBird_Ring            "Jemand hat geleutet"   (G_Doorbird) {expire="3s,OFF"}
+Switch DoorBird_Motion          "Jemand ist vorm Haus"  (G_Doorbird) {expire="3s,OFF"}
+
+Switch DoorBird_Restart         "Doorbird neustarten"       (G_Doorbird) { http=">[ON:GET:http://username:password@10.0.10.26/bha-api/restart.cgi]" , expire="3s,OFF"}
+Switch DoorBird_Lights          "Doorbird Nachtsichtmodus"  (G_Doorbird) { http=">[ON:GET:http://username:password@10.0.10.26/bha-api/light-on.cgi]" , expire="1s,OFF"}
+
+
+//Doorstrike is activated (duration is set in the settings of your app, those 3 secs here are just for the looks)
+Switch DoorBird_Strike_Frontdoor        "Vordertüre öffnen" (G_Doorbird) { http=">[ON:GET:http://username:password@10.0.10.26/bha-api/open-door.cgi?r=ghcbnw@1]" , expire="3s,OFF"}
