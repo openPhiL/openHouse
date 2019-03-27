@@ -20,10 +20,6 @@ Setup the Controller with the Paper-UI: Configuration-> Plus (+) -> Z-Wave Contr
 
 You will see the Z-Wave Controller Status turns to "online" if you were right after a couple of seconds.
 
-## Install HABMin in OpenHAB
-Use the PaperUI Interface of OpenHAB->Addons->User-Interfaces->HABmin to Install this addon. It has unique Z-Wave functionalities that are helpful: 
-- enable nightly heal mode
-
 
 ## Z-Wave Networking
 

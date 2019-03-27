@@ -28,26 +28,24 @@ Create a unifi unit override file /etc/systemd/system/unifi.service.d/override.c
 
 After a restart, I could reach the cockpit https://10.0.0.5:8443
 
-## initial setup
+## Initial setup
 It's pretty forward, fill out what the wizard wants to know. 
 You can already specify the settings for your wireless network, like SSID and password. skip the guest network, this is documented seperately. 
 
 You can skip the cloud integration if you don't want to manage your devices using their cloud - which i choose not to. 
 
-I then went to :
-- settings->Admins and created an account for me. 
-- settings->Controller and set the hostname to unifi_controller
+I then went to the settings :
+- Site: set the SiteName and enabled remote logging to 10.0.0.4
+- wireless Networks: edit the WLAN group (top right) and enable PMF.
+- Admins: and created an account for me. 
+- Controller: and set the hostname to unifi_controller
 
 ### Adding the devices
 on the devices tab, you see all the unifi devices you have in your network that are factory-reset. 
-I went over to the pfsense dhcp server and assigned a static IP address for the AP, 10.0.0.6, then restarted the AP (power-off/on-method).
+I went over to the pfsense dhcp server and assigned a static IP address for the devices, 10.0.1.0/24, then restarted the AP (power-off/on-method).
 Back to the Unify Controller, you can adopt them into your controller with a click on "adopt". 
 Once adpted, click on that device for details and if possible, upgrade the firmware. 
 
-
-
-## enable remote logging
-in the settings->site you can see the option to enable remote syslog logging, which can be enabled and addressed to our innoDB Server (10.0.0.4).
 
 ## Create certificate
 Using pfSense Webinterface->System->Cert Manager->Certificates->Add function, you can create a new server certificate for 10.0.0.5 (unifi_controller). Export the key and cert as well as the crt of the CA and copy them to the unifi_controller /usr/lib/unifi 

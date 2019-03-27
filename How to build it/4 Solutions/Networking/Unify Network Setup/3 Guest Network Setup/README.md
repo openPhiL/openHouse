@@ -13,6 +13,11 @@ Go to the admin interface of the unifi controller->settings-Wireless networks an
 - set the vlan to 10
 - check hide SSID
 
+# Define IoT Network
+Go to the admin interface of the unifi controller->settings->Networks and create a Guest_VLAN. In the details:
+- VLAN only
+- VLAN 10
+- Enable DHCP guarding 192.168.0.1
 
 
 
