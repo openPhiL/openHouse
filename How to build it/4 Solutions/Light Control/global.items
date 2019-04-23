@@ -1,0 +1,9 @@
+String global_tageszeit "Tageszeit [%s]" 
+
+Group G_Lightmodes "Lichtmodus"
+    Color global_lightmode_energetic    "Lightmodus Energie"    (G_Lightmodes) 
+    Color global_lightmode_warm         "Lightmodus Warm"       (G_Lightmodes) 
+    Color global_lightmode_color        "Lightmodus Color"      (G_Lightmodes) 
+
+
+Group:Number G_ManualTimer "Manuelle Timer"

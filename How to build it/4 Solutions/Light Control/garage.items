@@ -1,0 +1,47 @@
+/* --------------  Multi-purpose Sensors          ------------------- */
+Group G_Garage_Sensors                      "Sensoren im Garage"        (G_Garage,G_Sensors)
+Group:Switch:OR(ON, OFF) G_Garage_Presence  "Anwesenheit in der Garage [%s]" (G_Garage_Sensors)
+
+Number garage_Sensor1_Temperature         "Temperatur Garage [%.1f °C]"           (G_Garage_Sensors)        ["Temperature", "Measurement"]           
+Number garage_Sensor1_Luminance           "Helligkeit im Garage [%d]"             (G_Garage_Sensors)        
+
+Number garage_Sensor1_Battery             "Batterie Ladestand im Garage [%d %%]"  (G_Garage_Sensors)        ["Battery", "Measurement"]      
+Switch garage_Sensor1_Motion              "Bewegung(1) im Garage [%s]"            (G_Garage_Presence)            
+
+Number garage_Sensor2_Battery             "Batterie Ladestand im Garage [%d %%]"  (G_Garage_Sensors)        ["Battery", "Measurement"]      
+Switch garage_Sensor2_Motion              "Bewegung(2) im Garage [%s]"            (G_Garage_Presence)                
+
+Number garage_Sensor3_Battery             "Batterie Ladestand im Garage [%d %%]"  (G_Garage_Sensors)        ["Battery", "Measurement"]      
+Switch garage_Sensor3_Presence            "Bewegung(3) im Garage [%s]"            (G_Garage_Presence)               
+
+Number garage_Sensor4_Battery             "Batterie Ladestand im Garage [%d %%]"  (G_Garage_Sensors)        ["Battery", "Measurement"]      
+Switch garage_Sensor4_Presence            "Bewegung(4) im Garage [%s]"            (G_Garage_Presence)                
+
+Number garage_Sensor5_Battery             "Batterie Ladestand im Garage [%d %%]"  (G_Garage_Sensors)        ["Battery", "Measurement"]      
+Switch garage_Sensor5_Motion              "Bewegung(5) im Garage [%s]"            (G_Garage_Presence)               
+
+
+/* --------------   Lights           ------------------- */
+Group G_Garage_Lights (G_Garage)
+Group:Switch:OR(ON, OFF)    G_Garage_LightsSwitches  "Beleuchtung im Garage"         <light> (G_Garage_Lights,G_LightSwitches)     [ "Lighting" ]              
+Group:Dimmer                G_Garage_LightsDimmer    "Dimmer im Garage"              <light> (G_Garage_Lights,G_LightDimmer)       [ "Lighting" ]     
+Group:Color                 G_Garage_LightsColor     "Farbe im Garage"               <light> (G_Garage_Lights,G_LightColor)        [ "Lighting" ]   
+Group:Color                 G_Garage_LightsColortemp "Farbtemperatur im Garage"      <light> (G_Garage_Lights,G_LightColortemp)    [ "Lighting" ]   
+Group:Color                 G_Garage_LightsAlarm     "Lichtalarm im Garage"          <light> (G_Garage_Lights,G_LightAlarm)        [ "Lighting" ]    
+Group:Color                 G_Garage_LightsEffect    "Lichteffekt im Garage"         <light> (G_Garage_Lights,G_LightEffect)       [ "Lighting" ]     
+
+String garage_Lights_Scene                "Lichtmodus im Garage [%s]"  
+Number garage_Lights_Manual               "Licht manuell einschalten [%d min]"   (G_ManualTimer)   [ "Lighting" ]  
+
+//Hue Lightstripes Ceiling
+Switch	        garage_LightsSwitches_Ceiling   "Deckenlicht"	                            <light> (G_Garage_LightsSwitches)   [ "Lighting" ]  
+Dimmer	        garage_LightsDimmer_Ceiling	    "Dimmer vom Deckenlicht"	                <light> (G_Garage_LightsDimmer)     [ "Lighting" ]  
+Color	        garage_LightsColor_Ceiling	    "Farbe vom Deckenlicht"	                    <light> (G_Garage_LightsColor)      [ "Lighting" ]       
+Dimmer	        garage_LightsColortemp_Ceiling  "Farbtemperatur vom Deckenlicht"	        <light> (G_Garage_LightsColortemp)  [ "Lighting" ]    
+String	        garage_LightsAlarm_Ceiling      "Lichtalarm vom Deckenlicht"	            <light> (G_Garage_LightsAlarm)      [ "Lighting" ]      
+Switch	        garage_LightsEffect_Ceiling	    "Lichteffekt vom Deckenlicht"	            <light> (G_Garage_LightsEffect)     [ "Lighting" ]       
+
+
+/* --------------   Settings           ------------------- */
+Number garage_settings_LuminanceLimit     "Helligkeit ab welchem das Licht autom. geschaltet wird [%d]"                           (G_Garage_VirtualItems)
+

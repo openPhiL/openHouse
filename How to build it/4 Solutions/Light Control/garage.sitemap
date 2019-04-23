@@ -1,0 +1,4 @@
+sitemap garage label="Garage" {
+    Slider      item=garage_Lights_Manual visibility=[garage_Lights_Manual>0] 
+    Selection   item=garage_Lights_Scene mappings=[WAKEUP="Wakeup", BRIGHT="Bright", CHILL="Chill", ALL_OFF="Everything Off!"]
+}
