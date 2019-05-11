@@ -8,22 +8,27 @@ rule "Garage: Change light scene automatically"
 when 
     Item G_Garage_Presence changed or
     Item garage_Sensor1_Luminance changed or
+    Item garage_Settings_LuminanceLimit changed or
     Item garage_Lights_Manual changed to 0
 then 
-    if(( G_Garage_Presence.state == ON &&                                        //Presence
-     garage_Sensor1_Luminance.state < garage_settings_LuminanceLimit.state ) ||  //with poor light
-     garage_Lights_Manual.state > 0 ){                                           //or manual command
-          
-        //Change the scene:
-        switch(global_tageszeit.state){
-            case 'MORNING': garage_Lights_Scene.postUpdate( 'WAKEUP' )
-            case 'DAY':     garage_Lights_Scene.postUpdate( 'BRIGHT' )
-            case 'EVENING': garage_Lights_Scene.postUpdate( 'CHILL'  )
-            default:        garage_Lights_Scene.postUpdate( 'BRIGHT' )
-        }
-
+    if ( garage_Lights_Manual.state > 0 ){
+        //manual settings are still active, nothing is done automatically
     }else{
-        garage_Lights_Scene.postUpdate( 'ALL_OFF' )
+
+        if( G_Garage_Presence.state == ON &&                                        //Presence
+        garage_Sensor1_Luminance.state < garage_Settings_LuminanceLimit.state ){  //with poor light
+            
+            //Change the scene:
+            switch(global_tageszeit.state){
+                case 'MORNING': garage_Lights_Scene.postUpdate( 'WAKEUP' )
+                case 'DAY':     garage_Lights_Scene.postUpdate( 'BRIGHT' )
+                case 'EVENING': garage_Lights_Scene.postUpdate( 'CHILL'  )
+                default:        garage_Lights_Scene.postUpdate( 'BRIGHT' )
+            }
+
+        }else{
+            garage_Lights_Scene.postUpdate( 'ALL_OFF' )
+        }
     }
 end
 
