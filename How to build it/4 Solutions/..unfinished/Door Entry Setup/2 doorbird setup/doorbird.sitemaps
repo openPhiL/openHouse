@@ -1,0 +1,5 @@
+sitemap doorbird label="Doorbird" {
+    Frame {
+        Group item=G_Doorbird
+    }
+}

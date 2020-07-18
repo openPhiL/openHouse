@@ -1,0 +1,127 @@
+var Timer L_Masterbedroom_lights_ceiling_timer_off
+var Timer L_Masterbedroom_lights_wakeup_timer_stage2
+var Timer L_Masterbedroom_lights_wakeup_timer_stage3
+
+/*
+    Rule:           Turn on bedroom ceiling lights when there is movement in the dark
+    Description:    If it is too dark and somebody is moving in the Master bedroom, turn on the lights.
+                    The lights should be colored depending on the situation. 
+                    - In the morning, energetic
+                    - in the evening, smooth
+                    - in the night or if someone is sleeping, night-lights
+                    - the rest of the day, bright
+*/
+rule "turn on masterbedroom ceiling lights when movement in the dark"
+when
+    Item G_Masterbedroom_Motion changed or
+    Item Daytime changed or
+    Item Masterbedroom_Brightness changed
+
+then
+    L_Masterbedroom_lights_ceiling_timer_off?.cancel
+
+    //main switch for this rule
+    if ( R_turn_on_masterbedroom_ceiling_lights_when_movement_in_the_dark.state.toString == 'OFF' ){
+        return;
+    } 
+        
+    //Change lights
+    if (G_Masterbedroom_Motion.state.toString == "OFF" ||
+        Masterbedroom_Brightness.state.toString == "ON" ){
+
+            Masterbedroom_Lights_Ceiling_Dimmer.sendCommand( "20" )
+            L_Masterbedroom_lights_ceiling_timer_off = createTimer(now.plusSeconds(10), [|
+                Masterbedroom_Lights_Ceiling_Switches.sendCommand( "OFF" )
+            ])
+    }else{
+            Masterbedroom_Lights_Ceiling_Color.sendCommand( Lightmode_by_time.state.toString )
+    }
+    
+end
+
+/*
+    Rule:           Lights when Alarm is about to go off
+    Description:    Before the alarm goes off, turn on the ceiling and bedside lights on low and make them energetic slowly.     
+*/
+rule "lights when alarm clock is about to go ring"
+when 
+    Item alarm_clock_about_to_go_off changed to ON
+
+then
+    //main switch for this rule
+    if ( R_lights_when_alarm_clock_is_about_to_ring.state.toString == 'OFF' ){
+        return;
+    } 
+
+    var Color L_morning_light_energetic_stage1 = new HSBType(    
+                    new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
+                    new PercentType(29), // Saturation 0-100
+                    new PercentType(20) // Brightness 0-100
+                ).toColor()
+    var Color L_morning_light_energetic_stage2 = new HSBType(    
+                    new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
+                    new PercentType(29), // Saturation 0-100
+                    new PercentType(50) // Brightness 0-100
+                ).toColor()
+    var Color L_morning_light_energetic_stage3 = new HSBType(    
+                    new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
+                    new PercentType(29), // Saturation 0-100
+                    new PercentType(100) // Brightness 0-100
+                ).toColor()
+
+    //Stage 1 immediately
+    Masterbedroom_Lights_Ceiling_Color.sendCommand( L_morning_light_energetic_stage1 )
+    Masterbedroom_Lights_Bed_PhiL_Color.sendCommand( L_morning_light_energetic_stage1 )
+    Masterbedroom_Lights_Bed_Natascha_Color.sendCommand( L_morning_light_energetic_stage1 )
+
+    //Stage 2 later
+    L_Masterbedroom_lights_wakeup_timer_stage2 = createTimer(now.plusMinutes(2), [|
+        Masterbedroom_Lights_Ceiling_Color.sendCommand( L_morning_light_energetic_stage2 )
+        Masterbedroom_Lights_Bed_PhiL_Color.sendCommand( L_morning_light_energetic_stage2 )
+        Masterbedroom_Lights_Bed_Natascha_Color.sendCommand( L_morning_light_energetic_stage2 )
+    ])
+
+    //Stage 3 final
+    L_Masterbedroom_lights_wakeup_timer_stage3 = createTimer(now.plusMinutes(5), [|
+        Masterbedroom_Lights_Ceiling_Color.sendCommand( L_morning_light_energetic_stage3 )
+        Masterbedroom_Lights_Bed_PhiL_Color.sendCommand( L_morning_light_energetic_stage3 )
+        Masterbedroom_Lights_Bed_Natascha_Color.sendCommand( L_morning_light_energetic_stage3 )
+    ])
+
+end
+
+/*
+    Rule:           Vanity lights
+    Description:    Turn on the lights if somebody is sitting there, turn off afterwards
+*/
+rule "vanity lights"
+when 
+    Item Masterbedroom_Vanity_Chair_Occupied changed
+
+then
+    //main switch for this rule
+    if ( R_vanity_lights.state.toString == 'OFF' ){
+        return;
+    } 
+
+    //change lights
+    Masterbedroom_Lights_Vanity_Mirror_Switches.sendCommand( Masterbedroom_Vanity_Chair_Occupied.state.toString() )
+end
+
+/*
+    Rule:           Wardrobe lights
+    Description:    Turn on the lights if somebody is standing there, turn off afterwards
+*/
+rule "wardrobe lights"
+when 
+    Item Masterbedroom_Wardrobe_Multisensor_Motion changed
+
+then
+    //main switch for this rule
+    if ( R_wardrobe_lights.state.toString == 'OFF' ){
+        return;
+    } 
+
+    //change lights
+    Masterbedroom_Lights_Wardrobe_Switches.sendCommand( Masterbedroom_Wardrobe_Multisensor_Motion.state.toString() )
+end

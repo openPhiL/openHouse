@@ -1,2 +1,0 @@
-## Install VMware Workstation Player
-We are going to install the VMWare ESXI Hypervisor inside a virtual Machine that represents your dedicated VMWare Host. Download and Install VMWare's [Workstation Player](https://my.vmware.com/en/web/vmware/free#desktop_end_user_computing/vmware_workstation_player/15_0) (non-commercial version is free!)

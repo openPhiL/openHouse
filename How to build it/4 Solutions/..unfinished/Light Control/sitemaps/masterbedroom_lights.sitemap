@@ -1,0 +1,5 @@
+sitemap masterbedroom_lights label="OpenHouse" {
+    Frame {
+        Group item=G_Masterbedroom
+    }
+}

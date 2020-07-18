@@ -1,0 +1,17 @@
+[Unit]
+Description=Fibaro2Openhab Connector
+After=syslog.target
+
+[Service]
+Type=simple
+User=openhab
+Group=openhab
+ExecStart=/usr/bin/python3 /srv/openhab2-conf/python/fibaro2openhab.py
+;SyslogIdentifier=fibaro2openhab
+;StandardOutput=syslog
+;StandardError=syslog
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target
