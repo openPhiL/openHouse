@@ -1,0 +1,72 @@
+/* 
+runs every hour and after each reset to determine the current time of day
+*/
+rule "General: Determine Time of Day"
+when
+    Time cron "0 0 * * * ? *" //every hour    	
+    or 
+    System started
+then
+
+  val long morning_start 	  = now.withTimeAtStartOfDay.plusHours(6).millis
+  val long day_start 		    = now.withTimeAtStartOfDay.plusHours(8).millis
+  val long afternoon_start 	= now.withTimeAtStartOfDay.plusHours(14).millis
+  val long evening_start  	= now.withTimeAtStartOfDay.plusHours(19).millis
+  val long night_start 		  = now.withTimeAtStartOfDay.plusHours(22).millis
+  
+  var String lTageszeit  //variable helps as consequent postUpdates are not quick enough..
+
+  // without sunrise/sunset items
+  //All Ifs are processed consecutively to find the last fitting time of day
+  if ( now.isAfter(morning_start))	  lTageszeit = 'MORNING'
+  if ( now.isAfter(day_start)) 		    lTageszeit = 'DAY' 
+  if ( now.isAfter(afternoon_start)) 	lTageszeit = 'AFTERNOON' 
+  if ( now.isAfter(evening_start)) 	 	lTageszeit = 'EVENING' 
+  if ( now.isAfter(night_start))  	  lTageszeit = 'NIGHT' 
+  
+	global_tageszeit.sendCommand( lTageszeit )
+end
+
+/*
+Decreases all manual timer by 1 each minute.
+*/
+rule "General: Decrease manual timer"
+when
+    Time cron "0 0/1 * 1/1 * ? *"
+then
+
+  G_ManualTimer?.members.forEach(ManualTimer|
+    if (ManualTimer.state > 0){
+        var Number new_timer = ( ManualTimer.state as DecimalType).intValue() - 1
+        ManualTimer.sendCommand( new_timer )
+    }
+  )
+    
+end
+
+/*
+Defines the global light mode references
+*/
+rule "Initialize lightmodes"
+when  
+    System started
+then
+    global_lightmode_energetic.postUpdate( new HSBType(    
+                    new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
+                    new PercentType(29), // Saturation 0-100
+                    new PercentType(20)) // Brightness 0-100
+    )
+    global_lightmode_warm.postUpdate( new HSBType(    
+                    new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
+                    new PercentType(29), // Saturation 0-100
+                    new PercentType(10)) // Brightness 0-100
+    )
+    global_lightmode_color.postUpdate( new HSBType(    
+                    new DecimalType(227), // Hue/Color 0-360; 0=red, 120=green, 240=blue, 360=red(again)
+                    new PercentType(29), // Saturation 0-100
+                    new PercentType(15)) // Brightness 0-100
+    )
+end 
+
+
+
