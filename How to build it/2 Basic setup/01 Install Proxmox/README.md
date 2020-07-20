@@ -1,6 +1,6 @@
 # Install Proxmox with USB
 
-Proxmox is the main operation system of the host that runs all other server by sharing the own hardware virtualized. 
+Proxmox is the main operation system of the host that runs all other server by sharing the own hardware virtualized.
 
 ## Basic install
 
