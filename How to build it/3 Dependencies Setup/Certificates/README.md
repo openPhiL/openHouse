@@ -22,3 +22,7 @@ in the Webgui -> System -> Settings -> Administration
 ### OPENHAB
 
 Copy the content of your key and cert (downloaded from the pfsense Cert Manager ) into the files /etc/ssl/certs folder, overwriting existing openhab.cert and openhab.key files.
+
+### UnifiController
+
+There is this [website](https://help.ui.com/hc/en-us/articles/212500127-UniFi-SSL-certificate-error-upon-opening-controller-page) but I didn't get it to work .
