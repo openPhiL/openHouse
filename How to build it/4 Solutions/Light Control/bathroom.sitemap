@@ -1,0 +1,127 @@
+sitemap bathroom label="Badezimmer" {
+
+    Frame label="Licht" {
+        Slider item=Bathroom_Lights_Timer          label="Timer"
+        Selection item=Bathroom_Lights_Scene  mappings=[
+            MORNING="Morgens", 
+            DAY="Tag", 
+            AFTERNOON="Nachmittags", 
+            EVENING="Abends",  
+            NIGHT="Nachts", 
+            SHOWER="Duschen",
+            BATH="Baden",
+            ALL_OFF="ausgeschalten"]
+        Group item=G_Bathroom_Lights {
+            Group item=G_Bathroom_CeilingLight
+            Group item=G_Bathroom_BasinLight
+        }
+    }
+   
+    Frame label="Sensoren"{
+        Text item=G_Bathroom_Motion {
+            Chart item=G_Bathroom_Motion   refresh=5000 period=h 
+            Chart item=G_Bathroom_Motion   refresh=5000 period=4h 
+            Chart item=G_Bathroom_Motion   refresh=5000 period=8h 
+        }
+        Text item=G_Bathroom_Luminance {
+            Chart item=G_Bathroom_Luminance   refresh=5000 period=h 
+            Chart item=G_Bathroom_Luminance   refresh=5000 period=4h 
+            Chart item=G_Bathroom_Luminance   refresh=5000 period=8h 
+        }
+        Text item=Bathroom_Luminance_Natural
+        Text item=G_Bathroom_Humidity label="Luftfeuchtigkeit"{
+            Chart item=G_Bathroom_Humidity   refresh=5000 period=h 
+            Chart item=G_Bathroom_Humidity   refresh=5000 period=4h 
+            Chart item=G_Bathroom_Humidity   refresh=5000 period=8h 
+        }
+        Text item=G_Bathroom_Temperature label="Temperatur"{
+            Chart item=G_Bathroom_Temperature   refresh=5000 period=h 
+            Chart item=G_Bathroom_Temperature   refresh=5000 period=4h 
+            Chart item=G_Bathroom_Temperature   refresh=5000 period=8h 
+        }
+    }
+
+    Frame label="Rollladen"{
+        Default item=Bathroom_Rollershutter_Control label="Steuerung"
+        Slider item=Bathroom_Rollershutter_Control label="Position"
+    }
+    
+    Frame label="Geräte"{
+        Group item=G_Bathroom_AmazonEcho {
+            Group item=G_Bathroom_VoiceCommands
+            Group item=G_Bathroom_AmazonEcho
+        }
+    }
+
+    Frame label="Einstellungen"{
+        Group item=G_Bathroom_Lights_Settings {
+            Frame label="Lichtparameter"{  
+                Slider item=Bathroom_Settings_LuminanceLimit  minValue=0 maxValue=1000
+                Slider item=Bathroom_Settings_LightsOnMinimumTime minValue=0 maxValue=10
+                Slider item=Bathroom_Settings_LeavingTime minValue=0 maxValue=10
+            }
+            Frame label="AKtuelles Parameter übernehmen" {
+                Switch item=Bathroom_Lightmode_Save
+            }
+            Frame label="Lichtmode Morgends"{
+                Switch item=Bathroom_Lightmode_Morning_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Morning_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Morning_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Morning_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Morning_BasinLight_Switch
+            }
+            Frame label="Lichtmode Tagsüber"{
+                Switch item=Bathroom_Lightmode_Day_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Day_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Day_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Day_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Day_BasinLight_Switch
+            }                    
+            Frame label="Lichtmode Nachmittags"{
+                Switch item=Bathroom_Lightmode_Afternoon_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Afternoon_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Afternoon_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Afternoon_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Afternoon_BasinLight_Switch
+            }                    
+            Frame label="Lichtmode Abends"{
+                Switch item=Bathroom_Lightmode_Evening_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Evening_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Evening_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Evening_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Evening_BasinLight_Switch
+            }                    
+            Frame label="Lichtmode Nachts"{
+                Switch item=Bathroom_Lightmode_Night_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Night_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Night_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Night_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Night_BasinLight_Switch
+            }                 
+            Frame label="Lichtmode Baden"{
+                Switch item=Bathroom_Lightmode_Bath_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Bath_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Bath_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Bath_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Bath_BasinLight_Switch
+            }      
+            Frame label="Lichtmode Duschen"{
+                Switch item=Bathroom_Lightmode_Shower_CeilingLight_Switch
+                Slider item=Bathroom_Lightmode_Shower_CeilingLight_Colortemp
+                Slider item=Bathroom_Lightmode_Shower_CeilingLight_Dimmer
+                Colorpicker item=Bathroom_Lightmode_Shower_CeilingLight_Color
+                Switch item=Bathroom_Lightmode_Shower_BasinLight_Switch
+            }
+        }
+        Group item=G_Bathroom_Settings_Rules {
+            Frame label="Licht"{
+                Switch item=Bathroom_Settings_Rules_Lightning  
+            }
+            Frame label="Rollladen"{
+                Switch item=Bathroom_Settings_Rules_Rollershutter_DownAfterDusk
+                Switch item=Bathroom_Settings_Rules_Rollershutter_UpAfterDawn
+                Switch item=Bathroom_Settings_Rules_Rollershutter_UpAt10
+            }
+        }
+    }
+}

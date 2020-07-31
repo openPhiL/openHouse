@@ -1,0 +1,221 @@
+Group G_Bathroom       "Badezimmer"     (G_OG) ["Bathroom"]
+
+/* --------------   Sensors           ------------------- */
+Group G_Bathroom_Sensors        "Sensoren im Badezimmer"        (G_Bathroom,G_Sensors)
+
+Group:Switch:OR(ON, OFF)    G_Bathroom_Motion             "Bewegungsmelder im Badezimmer [%s]"    <motion>         (G_Bathroom_Sensors)
+Group:Number:MAX            G_Bathroom_Luminance            "Helligkeit im Badezimmer [%s lux]"             (G_Bathroom_Sensors)
+Number Bathroom_Luminance_Natural   "Helligkeit korrigiert im Badezimmer [%s lux]"  
+Group:Number:MAX            G_Bathroom_Temperature 			"Temperatur im Badezimmer [%.1f °C]" 	<temperatur>        (G_Bathroom_Sensors)
+Group:Number:MAX            G_Bathroom_Humidity 			"Luftfeuchtigkeit im Badezimmer [%s %%]"       (G_Bathroom_Sensors)
+
+Group G_Bathroom_SensorDoor "Sensor an der Türe" (G_Bathroom_Sensors)
+Number Bathroom_SensorDoor_Temperature         "Temperatur(Türe) im Badezimmer [%.1f °C]"       <temperatur>  (G_Bathroom_SensorDoor,G_Bathroom_Temperature)    ["Temperature", "Measurement"] 
+Number Bathroom_SensorDoor_Luminance           "Helligkeit(Türe) im Badezimmer[%d lux]"               (G_Bathroom_SensorDoor,G_Bathroom_Luminance)      ["Luminance", "Measurement"]  
+Number Bathroom_SensorDoor_Battery             "Batterie(Türe) Ladestand im Badezimmer[%d %%]"    (G_Bathroom_SensorDoor)                           ["Battery", "Measurement"]    
+Switch Bathroom_SensorDoor_Motion              "Bewegung(Türe) im Badezimmer[%s]"               <motion>  (G_Bathroom_SensorDoor,G_Bathroom_Motion)                                       
+
+Group G_Bathroom_SensorMirror "Sensor am Spiegel" (G_Bathroom_Sensors)
+Number Bathroom_SensorMirror_Temperature         "Temperatur(Spiegel) im Badezimmer [%.1f °C]"         (G_Bathroom_SensorMirror,G_Bathroom_Temperature)    ["Temperature", "Measurement"] 
+Number Bathroom_SensorMirror_Luminance           "Helligkeit(Spiegel) im Badezimmer[%d]"               (G_Bathroom_SensorMirror,G_Bathroom_Luminance)      ["Luminance", "Measurement"]  
+Number Bathroom_SensorMirror_Battery             "Batterie(Spiegel) Ladestand im Badezimmer[%d %%]"    (G_Bathroom_SensorMirror)                           ["Battery", "Measurement"]    
+Switch Bathroom_SensorMirror_Motion              "Bewegung(Spiegel) im Badezimmer[%s]"                 (G_Bathroom_SensorMirror,G_Bathroom_Motion)        
+
+/* --------------   Blinds           ------------------- */
+Group G_Bathroom_Rollershutter "Rolladen im Badezimmer" <blinds>  (G_Bathroom, G_Rollershutter)
+    Rollershutter   Bathroom_Rollershutter_Control           "Rollladen Badezimmer Steuerung [%d%%]"                        <blinds>    (G_Bathroom_Rollershutter) ["Window", "OpenLevel", "OpenState"]  {channel="shelly:shelly25-roller:69002d:roller#control" } 
+    Number          Bathroom_Rollershutter_Watts             "Rollladen Badezimmer aktueller Stromverbrauch [%d W]"         <power>     (G_Bathroom_Rollershutter, G_PowerMeter_Rollershutter_Current)  {channel="shelly:shelly25-roller:69002d:meter#totalKWH"}
+    Number          Bathroom_Rollershutter_TotalKWH          "Rollladen Badezimmer totaler Stromverbrauch [%.4f kWh]"       <power>     (G_Bathroom_Rollershutter, G_PowerMeter_Rollershutter_TotalkWh) {channel="shelly:shelly25-roller:69002d:meter#totalKWH"}
+    Switch          Bathroom_Rollershutter_OverTemperature   "Warnung: Shelly Bathroom_Rollershutter hat Übertemperatur!"   <alarm>     (G_Bathroom_Rollershutter, G_Monitoring_Temperature)            {channel="shelly:shelly25-roller:69002d:roller#overtemperature"}
+    Switch	        Bathroom_Rollershutter_isOnline          "Bathroom_Rollershutter is [%s] "	                            <network>   (G_Bathroom_Rollershutter, G_Monitoring_isOnline)               {channel="network:pingdevice:172_16_12_27:online"}
+    Number	        Bathroom_Rollershutter_hasLatency        "Bathroom_Rollershutter Latency is [%d ms] "	                <network>   (G_Bathroom_Rollershutter, G_Monitoring_hasLatency)             {channel="network:pingdevice:172_16_12_27:latency"}
+    Switch		    Bathroom_Rollershutter_hasAlreadyBeenOpenedByFirstMotion	"Indikator: Wurde Rolladen morgends durch Bewegung geöffnet"							(G_Bathroom_Rollershutter)
+
+/* --------------   Heating           ------------------- */
+Group G_Bathroom_Floorheating                   "Fußbodenheizung im Badezimmer"                                 (G_Bathroom, G_Floorheating)
+
+Number Bathroom_Floorheating_Target             "Fußbodenheizung Zieltemperatur Badezimmer"                      (G_Bathroom_Floorheating)           ["Setpoint", "Temperature"]
+Number Bathroom_Floorheating_Current            "Fußbodenheizung aktuelle Temperatur Badezimmer [%.1f °C]"       (G_Bathroom_Floorheating)           ["Measurement", "Temperature"]
+
+
+/* --------------   Lights           ------------------- */
+Group G_Bathroom_Lights         "Lichter im Badezimmer"       <light>  (G_Bathroom)
+Number Bathroom_Lights_Timer              "Licht Timer im Badezimmer [%d min]"    (G_Bathroom_Lights, G_LightsTimer)   [ "Lighting" ]  
+String Bathroom_Lights_Scene              "Lichtmodus im Badezimmer [%s]"         (G_Bathroom_Lights)
+
+Group:Switch:OR(ON, OFF)    G_Bathroom_LightsSwitches  "Beleuchtung im Badezimmer"         <light> (G_LightSwitches)     [ "Lighting" ]              
+
+// Light modes
+Group G_Bathroom_Lightmodes "Lichmodus im Badezimmer" (G_Lightmodes)
+Switch Bathroom_Lightmode_Save "Lichtmodus abspeichern" (G_Bathroom_Lightmodes)         { expire="1s, state=OFF" }
+
+Group G_Bathroom_Lightmode_Morning       "Lightmodus 'Morgen' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Morning_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Morning)
+    Color Bathroom_Lightmode_Morning_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Morning)
+    Dimmer Bathroom_Lightmode_Morning_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Morning)
+    Dimmer Bathroom_Lightmode_Morning_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Morning)
+    Switch Bathroom_Lightmode_Morning_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Morning)
+   
+Group G_Bathroom_Lightmode_Day       "Lightmodus 'Tag' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Day_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Day)
+    Color  Bathroom_Lightmode_Day_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Day)
+    Dimmer Bathroom_Lightmode_Day_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Day)
+    Dimmer Bathroom_Lightmode_Day_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Day)
+    Switch Bathroom_Lightmode_Day_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Day)
+ 
+Group G_Bathroom_Lightmode_Afternoon       "Lightmodus 'Nachmittag' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Afternoon_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Afternoon)
+    Color  Bathroom_Lightmode_Afternoon_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Afternoon)
+    Dimmer Bathroom_Lightmode_Afternoon_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Afteroon)
+    Dimmer Bathroom_Lightmode_Afternoon_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Afteroon)
+    Switch Bathroom_Lightmode_Afternoon_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Afternoon)
+   
+Group G_Bathroom_Lightmode_Evening       "Lightmodus 'Abend' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Evening_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Evening)
+    Color Bathroom_Lightmode_Evening_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Evening)
+    Dimmer Bathroom_Lightmode_Evening_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Evening)
+    Dimmer Bathroom_Lightmode_Evening_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Evening)
+    Switch Bathroom_Lightmode_Evening_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Evening)
+   
+Group G_Bathroom_Lightmode_Night       "Lightmodus 'Nacht' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Night_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Night)
+    Color Bathroom_Lightmode_Night_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Night)
+    Dimmer Bathroom_Lightmode_Night_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Night)
+    Dimmer Bathroom_Lightmode_Night_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Night)
+    Switch Bathroom_Lightmode_Night_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Night)
+   
+Group G_Bathroom_Lightmode_Bath       "Lightmodus 'Baden' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Bath_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Bath)
+    Color Bathroom_Lightmode_Bath_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Bath)
+    Dimmer Bathroom_Lightmode_Bath_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Bath)
+    Dimmer Bathroom_Lightmode_Bath_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Bath)
+    Switch Bathroom_Lightmode_Bath_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Bath)
+   
+Group G_Bathroom_Lightmode_Shower       "Lightmodus 'Duschen' im Badezimmer"     (G_Bathroom_Lightmodes) 
+    Switch Bathroom_Lightmode_Shower_CeilingLight_Switch        "CeilingLight Schalter"        (G_Bathroom_Lightmode_Shower)
+    Color Bathroom_Lightmode_Shower_CeilingLight_Color         "CeilingLight Farbe"           (G_Bathroom_Lightmode_Shower)
+    Dimmer Bathroom_Lightmode_Shower_CeilingLight_Dimmer "CeilingLight Dimmer"  (G_Bathroom_Lightmode_Shower)
+    Dimmer Bathroom_Lightmode_Shower_CeilingLight_Colortemp "CeilingLight Farbtemperatur"  (G_Bathroom_Lightmode_Shower)
+    Switch Bathroom_Lightmode_Shower_BasinLight_Switch    "BasinLight Schalter"    (G_Bathroom_Lightmode_Shower)
+    
+
+
+Group G_Bathroom_CeilingLight  "Deckenlampe" <light> (G_Bathroom_Lights)
+    Switch  Bathroom_CeilingLight_Switch        "Deckenlampe Schalter"	            <light> (G_Bathroom_LightsSwitches, G_Bathroom_CeilingLight)   [ "Lighting" ] { channel="lifx:colorlight:d073d52e24b8:color" }
+    Dimmer  Bathroom_CeilingLight_Dimmer        "Dimmer von Deckenlampe "           <light> (G_Bathroom_LightsDimmer, G_Bathroom_CeilingLight)     [ "Lighting" ] { channel="lifx:colorlight:d073d52e24b8:color" }
+    Color   Bathroom_CeilingLight_Color 	    "Farbe von Deckenlampe "	        <light> (G_Bathroom_LightsColor, G_Bathroom_CeilingLight)      [ "Lighting" ] { channel="lifx:colorlight:d073d52e24b8:color" }
+    Dimmer  Bathroom_CeilingLight_Colortemp     "Farbtemperatur von Deckenlampe "   <light> (G_Bathroom_LightsColortemp, G_Bathroom_CeilingLight)  [ "Lighting" ] { channel="lifx:colorlight:d073d52e24b8:temperature" }
+
+Group G_Bathroom_BasinLight "Waschtischlampe" <light> (G_Bathroom_Lights)
+    Switch  Bathroom_BasinLight_Switch          "Waschtischlampe Schalter"                                          <light>             (G_Bathroom_BasinLight, G_Bathroom_LightsSwitches)   [ "Lighting" ]                 {channel="shelly:shelly1pm:b1daea:relay#output"}
+    Number  Bathroom_BasinLight_Watt            "Waschtischlampe  Stromverbrauch [%d W]"                            <poweroutlet_eu>    (G_Bathroom_BasinLight, G_PowerMeter_Lights_Current, G_PowerMeter_Outlets_Current)                                     {channel="shelly:shelly1pm:b1daea:meter#currentWatts"}
+    Number  Bathroom_BasinLight_totalKWH        "Waschtischlampe  Stromverbrauch [%.4f kWh]"                        <poweroutlet_eu>    (G_Bathroom_BasinLight, G_PowerMeter_Lights_TotalkWh, G_PowerMeter_Outlets_TotalkWh)                            {channel="shelly:shelly1pm:b1daea:meter#totalKWH"}
+    Switch  Bathroom_BasinLight_OverTemperature "Warnung: Shelly G_Livingroom_Rollershutter hat Übertemperatur!"                        (G_Bathroom_BasinLight, G_Monitoring_Temperature)                                   {channel="shelly:shelly1pm:b1daea:relay#overtemperature"}
+    Switch  Bathroom_BasinLight_isOnline        "Livingroom_Rollershutter is [%s] "	                                <network>           (G_Bathroom_BasinLight, G_Monitoring_isOnline)                                                  {channel="network:pingdevice:172_16_12_11:online"}
+    Number  Bathroom_BasinLight_hasLatency      "Livingroom_Rollershutter Latency is [%d ms]"                       <network>           (G_Bathroom_BasinLight, G_Monitoring_hasLatency)                                                   {channel="network:pingdevice:172_16_12_11:latency"}
+ 
+
+/* --------------   Devices           ------------------- */ 
+Group G_Bathroom_AmazonEcho "Amazon Echo im Badezimmer" <player> (G_Bathroom)
+    // Player control
+    Player Bathroom_AmazonEcho_Player                "Player"                                (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:player"}
+    Dimmer Bathroom_AmazonEcho_Volume                "Volume [%.0f %%]" <soundvolume>        (G_Bathroom_AmazonEcho,G_Amazon_Speakers_Volumne) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:volume"}
+    Switch Bathroom_AmazonEcho_Shuffle               "Shuffle"                               (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:shuffle"}
+    // Media channels
+// deactivated because it spams into my log: Dimmer Bathroom_AmazonEcho_MediaProgress         "Media progress"                        (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:mediaProgress"}
+// deactivated because it spams into my log: Number:Time Bathroom_AmazonEcho_MediaProgressTime  "Media progress time [%d %unit%]"   (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:mediaProgressTime"}
+    Number:Time Bathroom_AmazonEcho_MediaLength      "Media length [%d %unit%]"              (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:mediaLength"}
+
+    // Player Information
+    String Bathroom_AmazonEcho_ImageUrl              "Image URL"                             (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:imageUrl"}
+    String Bathroom_AmazonEcho_Title                 "Title"                                 (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:title"}
+    String Bathroom_AmazonEcho_Subtitle1             "Subtitle 1"                            (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:subtitle1"}
+    String Bathroom_AmazonEcho_Subtitle2             "Subtitle 2"                            (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:subtitle2"}
+    String Bathroom_AmazonEcho_ProviderDisplayName   "Provider"                              (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:providerDisplayName"}
+
+    // Music provider and start command
+    /* dumps in the log...
+    String Bathroom_AmazonEcho_MusicProviderId       "Music Provider Id"                     (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:musicProviderId"}
+    String Bathroom_AmazonEcho_PlayMusicCommand      "Play music voice command (Write Only)" (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:playMusicVoiceCommand"}
+    String Bathroom_AmazonEcho_StartCommand          "Start Information"                     (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:startCommand"}
+    */
+    // TuneIn Radio
+    String Bathroom_AmazonEcho_RadioStationId        "TuneIn Radio Station Id"               (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:radioStationId"}
+    Switch Bathroom_AmazonEcho_Radio                 "TuneIn Radio"                          (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:radio"}
+
+    // Amazon Music
+    String Bathroom_AmazonEcho_AmazonMusicTrackId    "Amazon Music Track Id"                 (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:amazonMusicTrackId"}
+    String Bathroom_AmazonEcho_AmazonMusicPlayListId "Amazon Music Playlist Id"              (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:amazonMusicPlayListId"}
+    Switch Bathroom_AmazonEcho_AmazonMusic           "Amazon Music"                          (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:amazonMusic"}
+
+    // Bluetooth
+    String Bathroom_AmazonEcho_BluetoothMAC          "Bluetooth MAC Address" <bluetooth>     (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:bluetoothMAC"}
+    Switch Bathroom_AmazonEcho_Bluetooth             "Bluetooth"             <bluetooth>     (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:bluetooth"}
+    String Bathroom_AmazonEcho_BluetoothDeviceName   "Bluetooth Device"      <bluetooth>     (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:bluetoothDeviceName"}
+
+    // Commands
+    String Bathroom_AmazonEcho_TTS                   "Text to Speech"                        (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:textToSpeech"}
+    Dimmer Bathroom_AmazonEcho_TTS_Volume            "Text to Speech Volume"                 (G_Bathroom_AmazonEcho,G_Amazon_Speakers_Volumne) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:textToSpeechVolume"}
+    String Bathroom_AmazonEcho_Remind                "Remind"                                (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:remind"}
+    String Bathroom_AmazonEcho_PlayAlarmSound        "Play Alarm Sound"                      (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:playAlarmSound"}
+    String Bathroom_AmazonEcho_StartRoutine          "Start Routine"                         (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:startRoutine"}
+    Dimmer Bathroom_AmazonEcho_NotificationVolume    "Notification volume"                   (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:notificationVolume"}
+    Switch Bathroom_AmazonEcho_AscendingAlarm        "Ascending alarm"                       (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:ascendingAlarm"}
+
+    // Feedbacks 
+    String Bathroom_AmazonEcho_LastVoiceCommand          "Last voice command"                (G_Bathroom_AmazonEcho) {channel="amazonechocontrol:echo:25748e4b:G090QU06836206NL:lastVoiceCommand"}
+
+    // Flashbriefings
+    Switch FlashBriefing_Technical_Save   "Save (Write only)" (G_Bathroom_AmazonEcho) { channel="amazonechocontrol:flashbriefingprofile:account1:flashbriefing1:save"} 
+    Switch FlashBriefing_Technical_Active "Active"            (G_Bathroom_AmazonEcho) { channel="amazonechocontrol:flashbriefingprofile:account1:flashbriefing1:active"}
+    String FlashBriefing_Technical_Play   "Play (Write only)" (G_Bathroom_AmazonEcho) { channel="amazonechocontrol:flashbriefingprofile:account1:flashbriefing1:playOnDevice"}
+    Switch FlashBriefing_LifeStyle_Save   "Save (Write only)" (G_Bathroom_AmazonEcho) { channel="amazonechocontrol:flashbriefingprofile:account1:flashbriefing2:save"} 
+    Switch FlashBriefing_LifeStyle_Active "Active"            (G_Bathroom_AmazonEcho) { channel="amazonechocontrol:flashbriefingprofile:account1:flashbriefing2:active"}
+    String FlashBriefing_LifeStyle_Play   "Play (Write only)" (G_Bathroom_AmazonEcho) { channel="amazonechocontrol:flashbriefingprofile:account1:flashbriefing2:playOnDevice"}
+
+/* --------------   Voice Commands           ------------------- */ 
+Group G_Bathroom_VoiceCommands "Sprachbefehle im Badezimmer" (G_Bathroom, G_EchoCommands)
+    Switch Bathroom_EchoVoiceCommand_EsIstZuDunkel     "es ist zu dunkel"                      (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_Licht             "Licht (an)"                            (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_LichtHell         "mach das licht hell"                   (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_LichtAn1h         "lass das licht für eine stunde an"     (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_LichtAn2h         "lass das licht für zwei stunden an"    (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_LichtAn20m        "lass das licht an"                     (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_SaveLight         "speicher das licht"                    (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_WoIstMeinHandy    "Wo ist mein Handy"                     (G_Bathroom_VoiceCommands)   { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_Rollershutter     "Rolladen"                              (G_Bathroom_VoiceCommands) { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_RollershutterUP   "Rolladen hoch, auf, rauf, öffnen"      (G_Bathroom_VoiceCommands) { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_RollershutterDOWN "Rolladen runter, schließen, zu"        (G_Bathroom_VoiceCommands) { expire="1s, state=OFF" }
+    Switch Bathroom_EchoVoiceCommand_Duschmodus        "Duschmodus"                            (G_Bathroom_VoiceCommands) { expire="1s, state=OFF" }
+
+
+/* --------------   Outlets           ------------------- */
+Group:Switch:OR(ON, OFF)    G_Bathroom_Outlets     "Steckdosen im Badezimmer"   <outlet> (G_Bathroom,G_Outlets)   
+
+Group   G_Bathroom_Outlets_MirrorLeftLeft       "Steckdosen im Spiegel Links - Links"       (G_Bathroom_Outlets)  
+Group   G_Bathroom_Outlets_MirrorLeftRight      "Steckdosen im Spiegel Links - Rechts"      (G_Bathroom_Outlets)  
+Group   G_Bathroom_Outlets_MirrorRightLeft      "Steckdosen im Spiegel Rechts - Links"      (G_Bathroom_Outlets)  
+Group   G_Bathroom_Outlets_MirrorRightRight     "Steckdosen im Spiegel Rechts - Rechts"     (G_Bathroom_Outlets)  
+Group   G_Bathroom_Outlets_Basin                "Steckdosen am Waschtisch"      (G_Bathroom_Outlets)  
+Group   G_Bathroom_Outlets_Cabinet              "Steckdosen am Schrank"         (G_Bathroom_Outlets)  
+
+
+/* --------------   Settings          ------------------- */ 
+Group G_Bathroom_Settings "Einstellungen für das Badezimmer" (G_Bathroom)
+    Group G_Bathroom_Lights_Settings "Einstellungen für das Licht im Badezimmer" (G_Bathroom_Settings) 
+        Switch Bathroom_Settings_Rules_Lightning      "Regeln zur automatischen Lichtsteuerung[ %s]" (G_Bathroom_Lights_Settings)
+        Number Bathroom_Settings_LuminanceLimit       "Helligkeit ab welchem das Licht autom. geschaltet wird [%d lux]"   (G_Bathroom_Lights_Settings)
+        Number Bathroom_Settings_LightsOnMinimumTime  "Zeit die das Licht beim einschalten mindest an bleibt [%d min]"    (G_Bathroom_Lights_Settings)
+        Number Bathroom_Settings_LeavingTime          "Zeit ohne Bewegung bevor das Licht ausgeht [%d min]"               (G_Bathroom_Lights_Settings)
+    Group G_Bathroom_Settings_Rules "Badezimmer Regeln einstellen" (G_Bathroom_Settings)
+        Group G_Bathroom_Settings_Rules_Rollershutter "Regeln zum Rolladen" (G_Bathroom_Settings_Rules)
+            Switch Bathroom_Settings_Rules_Rollershutter_DownAfterDusk    "Rollladen herunter nach Sonnenuntergang" (G_Bathroom_Settings_Rules_Rollershutter)
+            Switch Bathroom_Settings_Rules_Rollershutter_UpAfterDawn      "Rollladen hoch nach Sonnenaufgang"          (G_Bathroom_Settings_Rules_Rollershutter)
+            Switch Bathroom_Settings_Rules_Rollershutter_UpAt10            "Rollladen hoch um 10 Uhr"          (G_Bathroom_Settings_Rules_Rollershutter)
+        
+
+/* --------------   Modes         ------------------- */ 
+Group G_Bathroom_Scenes "Badezimmer Scene/Modus" (G_Bathroom)
+Switch Bathroom_Scene_Shower "Duschmodus" (G_Bathroom_Scenes) 
+
+Switch V_Bathroom_Rollershutter_Up_after_leaving "Rolladen wartet auf Abwesenheit"

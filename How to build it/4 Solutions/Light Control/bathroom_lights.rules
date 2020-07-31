@@ -1,0 +1,305 @@
+/*
+General description:
+Scene controls the Timer to turn on the lights (depening on scene or Auto)
+Timer controls the Scene to turn everything off. 
+Motion is paired with the fixed Luminance_natural
+*/
+
+/*
+This rule changes the actual Luminance in the room
+This happens only if the lights are off. if lights are on, the 
+value of the sensors is not taken as they are obviously wrong
+*/
+rule "Bathroom: Fix Luminance"
+when
+    Item G_Bathroom_Luminance changed
+then
+logDebug("lightning.rules", "Bathroom: Fix Luminance")
+    if( G_Bathroom_LightsSwitches.state != ON){
+        Bathroom_Luminance_Natural.sendCommand(G_Bathroom_Luminance.state.toString)
+    }
+end
+
+/*
+This rule changes the scene automatically when either
+- presence is detected while luminance is low 
+- the manual timer has been set
+-> a change in the scene will trigger the next rule...
+*/
+rule "Bathroom: Change light scene automatically"
+when 
+    Item Bathroom_Lights_Timer                 changed      or
+    Item G_Bathroom_Motion                     changed      or
+    Item Bathroom_Settings_LuminanceLimit      changed      or
+    Item Bathroom_Luminance_Natural          changed     
+then 
+    if(Bathroom_Settings_Rules_Lightning.state != ON){
+        logWarn("lightning.rules", "Bathroom: Change light scene automatically NOT Executed - deactivated")
+        return;
+    }
+    logDebug("lightning.rules", "Bathroom: Change light scene automatically") 
+
+    if( G_Bathroom_Motion.state == ON  &&                                         //Presence AND
+        ( Bathroom_Luminance_Natural.state as Number).intValue < ( Bathroom_Settings_LuminanceLimit.state as Number).intValue)  //too dark
+        {  
+            //Turn on the lights with minimum Timer time
+            if(Bathroom_Lights_Timer.state == 0){
+                Bathroom_Lights_Scene.sendCommand( 'AUTO' )                                    //Set the Scene
+                return;
+            }
+
+           //Ensure we always have enough time left on the timer after we leave
+            if ( ( Bathroom_Lights_Timer.state as Number).intValue < ( Bathroom_Settings_LeavingTime.state as Number).intValue) {
+                Bathroom_Lights_Timer.sendCommand( Bathroom_Settings_LeavingTime.state.toString )
+                return;
+            }           
+    }
+end
+
+
+
+/*
+this rules deactivates everything when the timer receives 0
+*/
+rule "Bathroom: Timer control"
+when
+    Item Bathroom_Lights_Timer received command 0
+then
+logDebug("lightning.rules", "Bathroom: Timer control")
+
+        Bathroom_Lights_Scene.sendCommand( 'ALL_OFF')
+    
+end
+
+
+ 
+/*
+When the lightscene changes, we can set all the lights and their values here
+depending on the selected scene 
+*/
+rule "Bathroom: Lightscene changes actual Lights"
+when
+    Item Bathroom_Lights_Scene received command
+then
+logDebug("lightning.rules", "Bathroom: Lightscene changes actual Lights" + receivedCommand)
+
+    if (receivedCommand == 'AUTO'){
+        switch(Global_TimeOfDay.state){
+                case 'MORNING':     Bathroom_Lights_Scene.sendCommand( 'MORNING' )
+                case 'DAY':         Bathroom_Lights_Scene.sendCommand( 'DAY' )
+                case 'AFTERNOON':   Bathroom_Lights_Scene.sendCommand( 'AFTERNOON' )
+                case 'EVENING':     Bathroom_Lights_Scene.sendCommand( 'EVENING'  )
+                case 'NIGHT':       Bathroom_Lights_Scene.sendCommand( 'NIGHT'  )
+                default:            Bathroom_Lights_Scene.sendCommand( 'DAY' )
+            }
+            return;
+    }
+
+    if (receivedCommand == 'ALL_OFF'){
+            G_Bathroom_LightsSwitches.sendCommand(OFF)
+            Bathroom_Lights_Timer.postUpdate(0)
+            return;
+    }
+
+// ---- Scenes:
+    if ( ( Bathroom_Lights_Timer.state as Number).intValue <  ( Bathroom_Settings_LightsOnMinimumTime.state as Number).intValue) {
+         Bathroom_Lights_Timer.sendCommand( Bathroom_Settings_LightsOnMinimumTime.state.toString )
+    }    
+
+    switch (receivedCommand){
+        case 'MORNING': { 
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Morning_CeilingLight_Switch.state.toString)
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Morning_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Morning_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Morning_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Morning_BasinLight_Switch.state.toString )
+        }
+        case 'DAY': { 
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Day_CeilingLight_Switch.state.toString)
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Day_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Day_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Day_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Day_BasinLight_Switch.state.toString )
+        }
+        case 'AFTERNOON': { 
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Afternoon_CeilingLight_Switch.state.toString) 
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Afternoon_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Afternoon_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Afternoon_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Afternoon_BasinLight_Switch.state.toString )
+          }
+        case 'EVENING':  {
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Evening_CeilingLight_Switch.state.toString)
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Evening_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Evening_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Evening_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Evening_BasinLight_Switch.state.toString )
+         }       
+        case 'NIGHT':  {
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Night_CeilingLight_Switch.state.toString)
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Night_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Night_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Night_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Night_BasinLight_Switch.state.toString )
+         }
+        case 'SHOWER':  {
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Shower_CeilingLight_Switch.state.toString)
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Shower_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Shower_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Shower_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Shower_BasinLight_Switch.state.toString )
+          }
+        case 'BATH':  {
+            Bathroom_CeilingLight_Switch.sendCommand( Bathroom_Lightmode_Bath_CeilingLight_Switch.state.toString)
+            Bathroom_CeilingLight_Color.sendCommand( Bathroom_Lightmode_Bath_CeilingLight_Color.state.toString )
+            Bathroom_CeilingLight_Dimmer.sendCommand( Bathroom_Lightmode_Bath_CeilingLight_Dimmer.state.toString )
+            Bathroom_CeilingLight_Colortemp.sendCommand( Bathroom_Lightmode_Bath_CeilingLight_Colortemp.state.toString )
+            Bathroom_BasinLight_Switch.sendCommand( Bathroom_Lightmode_Bath_BasinLight_Switch.state.toString )
+         }
+
+        default: {
+            logError("DUMP: Bathroom: Lightscene changes actual Lights", "unknown Light Scene:" + Bathroom_Lights_Scene.state.toString)
+        }
+    }
+end
+
+
+rule "Bathroom: save current Lights as Lightscene "
+when
+    Item Bathroom_Lightmode_Save received command ON
+then
+logDebug("lightning.rules", "Bathroom: save current Lights as Lightscene " + receivedCommand)
+
+switch(Bathroom_Lights_Scene.state){
+    case 'MORNING': {
+        Bathroom_Lightmode_Morning_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Morning_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Morning_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Morning_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Morning_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString)
+    }
+    case 'DAY':    {
+        Bathroom_Lightmode_Day_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Day_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Day_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Day_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Day_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString)
+    }
+    case 'AFTERNOON':  {
+        Bathroom_Lightmode_Afternoon_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Afternoon_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Afternoon_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Afternoon_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Afternoon_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString)
+    }
+    case 'EVENING':  {
+        Bathroom_Lightmode_Evening_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Evening_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Evening_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Evening_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Evening_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString) 
+    }
+    case 'NIGHT':   {
+        Bathroom_Lightmode_Night_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Night_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Night_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Night_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Night_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString)
+    }
+    case 'BATH':   {
+        Bathroom_Lightmode_Bath_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Bath_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Bath_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Bath_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Bath_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString)
+    }
+    case 'SHOWER':   {
+        Bathroom_Lightmode_Shower_CeilingLight_Switch.sendCommand(Bathroom_CeilingLight_Switch.state.toString)
+        Bathroom_Lightmode_Shower_CeilingLight_Color.sendCommand(Bathroom_CeilingLight_Color.state.toString)
+        Bathroom_Lightmode_Shower_CeilingLight_Dimmer.sendCommand(Bathroom_CeilingLight_Dimmer.state.toString)
+        Bathroom_Lightmode_Shower_CeilingLight_Colortemp.sendCommand(Bathroom_CeilingLight_Colortemp.state.toString)
+        Bathroom_Lightmode_Shower_BasinLight_Switch.sendCommand(Bathroom_BasinLight_Switch.state.toString)
+    }
+}
+    
+end
+
+/*
+this rule turn on the lights for Shower
+*/
+rule "Bathroom: Showertime"
+when
+    Item Bathroom_Scene_Shower received command
+then
+logDebug("lightning.rules", "Bathroom: Voiced Shower" + receivedCommand)
+
+    switch(receivedCommand){
+        case ON: {
+            Bathroom_Lights_Timer.postUpdate(20)
+            Bathroom_Lights_Scene.sendCommand( 'SHOWER')
+        }
+        case OFF: {
+            Bathroom_Lights_Scene.sendCommand( 'AUTO')
+        }
+    }
+    
+end
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Es ist zu dunkel"
+when Item Bathroom_EchoVoiceCommand_EsIstZuDunkel received command ON
+then
+    var new_luminance_value = new Integer( (Bathroom_Luminance_Natural.state as DecimalType).intValue + 10 )
+    Bathroom_Settings_LuminanceLimit.sendCommand(new_luminance_value)
+    Bathroom_AmazonEcho_LastVoiceCommand.sendCommand('Schwellenwert nun auf ' + new_luminance_value + ' lux eingestellt')
+end
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Licht"
+when Item Bathroom_EchoVoiceCommand_Licht received command ON
+then
+    Bathroom_Lights_Scene.sendCommand('AUTO')
+end
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Licht hell"
+when Item Bathroom_EchoVoiceCommand_LichtHell received command ON
+then
+    Bathroom_Lights_Scene.sendCommand('DAY')
+end
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Licht an 20min"
+when Item Bathroom_EchoVoiceCommand_LichtAn20m received command ON
+then
+    Bathroom_Lights_Timer.postUpdate(20) 
+    Bathroom_AmazonEcho_LastVoiceCommand.sendCommand('20 Minuten')
+end
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Licht an 2h"
+when Item Bathroom_EchoVoiceCommand_LichtAn2h received command ON
+then
+    Bathroom_Lights_Timer.postUpdate(120) 
+    Bathroom_AmazonEcho_LastVoiceCommand.sendCommand('2 Stunden')
+end
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Licht an 1h"
+when Item Bathroom_EchoVoiceCommand_LichtAn1h received command ON
+then
+    Bathroom_Lights_Timer.postUpdate(60) 
+    Bathroom_AmazonEcho_LastVoiceCommand.sendCommand('eine Stunde')
+end
+
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+rule "Bathroom_VoiceControl: Speicher das Licht"
+when Item Bathroom_EchoVoiceCommand_SaveLight received command ON
+then
+    Bathroom_Lightmode_Save.sendCommand('ON')
+end
