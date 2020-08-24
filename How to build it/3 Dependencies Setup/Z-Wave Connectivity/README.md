@@ -47,9 +47,67 @@ You will see the Z-Wave Controller Status turns to "online" if you were right af
 
 ## Add FIbaro HomeCenter to OpenHAB
 
-I had my issues with the Z-Wave USB Stick as it was not a stable solution. I went with a Fibaro Home Center Lite as a dedicated Controller and have a python script listening to that Gateway and posting changes via REST. Not a perfect solution, but a more stable one. The Python script is attached [here](FibaroHC2OpenHAB.py) and I placed in a folder I created for python scripts: {openhab-conf}/python
+I had my issues with the Z-Wave USB Stick as it was not a stable solution. I went with a Fibaro Home Center Lite as a dedicated Controller and have a python scripts to that Gateway API. 
+
+### Fibaro Gateway Change Notifications
+
+and posting changes via REST. Not a perfect solution, but a more stable one for my taste. The Python script is attached [here](FibaroHC2OpenHAB.py) and I placed in a folder I created for python scripts: {openhab-conf}/python
 
 Additionally, create a service to have this script running in the background all the time. copy the attached file fibaro2Openhab.service to /lib/systemd/system/fibaro2openhab.service and run the command sudo systemctl enable fibaro2openhab.service
+
+### Fibaro Gateway Device Pulling
+
+Sometimes, you may want to have device data in OpenHab, even if they are not part of the changes (or you missed them). So this script reads the /API/Devices/_deviceid_ and returns the json, so that Openhab can read it.
+The Python script is attached [here](fibaro_api_devices.py)
+
+Create a Thing:
+![fibaro_connection_thing](2020-08-17-01-25-47.png)
+
+Have an data item for for that thing as well as items for all the data you want to have:
+
+    String Dining_TableCeiling_Sensor_Data "Sensor unterm Bett Json-Data [%s]" (G_Dining_TableCeiling) {channel="exec:command:d7a1047b:output"}
+    String Dining_TableCeiling_Sensor_Name "Name Sensor:[%s]"  (G_Dining_TableCeiling)  
+    Number Dining_TableCeiling_Sensor_BatteryLevel "Battery:[%s]"  (G_Dining_TableCeiling)  
+    String Dining_TableCeiling_Sensor_Dead "Dead:[%s]"  (G_Dining_TableCeiling)  
+    String Dining_TableCeiling_Sensor_DeadReason "Dead Reason:[%s]"  (G_Dining_TableCeiling)   
+
+Create a rule to update the items per thing when the data changed (better performance than individual requests)
+
+    rule "Dining_TableCeiling_Sensor_Data changed data"
+    when
+    Item Dining_TableCeiling_Sensor_Data changed
+    then
+    Dining_TableCeiling_Sensor_Name.postUpdate(transform("JSONPATH", "$.name", Dining_TableCeiling_Sensor_Data.state.toString))
+    Dining_TableCeiling_Sensor_BatteryLevel.postUpdate(Float::parseFloat(transform("JSONPATH", "$.properties.batteryLevel", Dining_TableCeiling_Sensor_Data.state.toString)) / 10 )
+    Dining_TableCeiling_Sensor_Dead.postUpdate(transform("JSONPATH", "$.properties.dead", Dining_TableCeiling_Sensor_Data.state.toString))
+    Dining_TableCeiling_Sensor_DeadReason.postUpdate(transform("JSONPATH", "$.properties.deadReason", Dining_TableCeiling_Sensor_Data.state.toString))
+    end
+
+If you want to get alerts based on that, use this example:
+
+    rule "alarm on dead devices"
+    when 
+        Member of G_FibaroDevices_Alert_Dead changed
+    then 
+
+
+    val telegramAction = getActions("telegram","telegram:telegramBot:familygroup")
+
+        val device = triggeringItem
+        if (device.state.toString == 'true'){
+            logInfo("loggerName", device + "is dead")
+            val deadReason = G_FibaroDevices_Alert_Dead.members.findFirst[ dt | dt.name == device.name + "Reason" ] 
+            logInfo("loggerName", deadReason.state.toString )
+            telegramAction.sendTelegram("Sensor" + device.name + " hat Verbindung verloren (" + deadReason.state.toString + ")")
+        }else if (device.state.toString == 'false'){
+            logInfo("loggerName", device + "is alive")
+            telegramAction.sendTelegram("Sensor" + device.name + " ist wieder verbunden")
+        }else{
+            logInfo("loggerName", device + "has unknown status")
+            telegramAction.sendTelegram("Sensor" + device + " hat unbekannten Status")
+        }
+
+    end 
 
 ## Z-Wave Networking
 

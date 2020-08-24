@@ -1,0 +1,1 @@
+https://medium.com/swlh/dnssec-dot-and-dnsbl-on-opnsense-9ee6a766af55

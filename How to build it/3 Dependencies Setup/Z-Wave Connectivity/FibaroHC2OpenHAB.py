@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import json
 from json.decoder import JSONDecodeError
 import requests
@@ -14,7 +15,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('fibaro2openhab')
 logger.setLevel(logging.INFO)
 # create file handler which logs even debug messages
-fh = logging.FileHandler('/var/log/openhab2/fibaro2openhab.log')
+fh = RotatingFileHandler('/var/log/openhab2/fibaro2openhab.log', mode='a', maxBytes=5*1024*1024, 
+                                 backupCount=2, encoding=None, delay=0)
 ##fh = logging.FileHandler('fibaro2openhab.log')
 fh.setLevel(logging.INFO)
 # create console handler with a higher log level
