@@ -47,13 +47,3 @@ and can be tested with (2 different ssh-terminals)
 
     mosquitto_sub -h localhost -t test 
     mosquitto_pub -h localhost -t test -m "jo"
-
-Here is a neat little script [thanks c-rieger](https://www.c-rieger.de/nextcloud-installation-mit-nur-einem-skript/) that does all the work:
-
-    cd /usr/local/src && apt install wget -y
-    wget https://it-services.c-rieger.de/s/kX56nntHoWWoPps/download -O install.zip
-    apt install unzip -y && unzip install.zip
-    chmod +x install.sh
-    ./install.sh
-
-I backuped a copy of this script just in case, attached here.
