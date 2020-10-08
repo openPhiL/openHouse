@@ -22,7 +22,15 @@ in the Webgui -> System -> Settings -> Administration
 ### OPENHAB
 
 Copy the content of your key and cert (downloaded from the pfsense Cert Manager ) into the files /etc/ssl/certs folder, overwriting existing openhab.cert and openhab.key files.
+Then, restart nginx using sudo systemctl restart nginx.service
 
 ### UnifiController
 
 There is this [website](https://help.ui.com/hc/en-us/articles/212500127-UniFi-SSL-certificate-error-upon-opening-controller-page) but I didn't get it to work .
+
+### Nextcloud
+
+Copy the content of your key and cert (downloaded from the pfsense Cert Manager ) into the files /etc/ssl/certs folder. 
+Then, add those 2 lines into /etc/nginx/conf.d/nextcloud.conf
+![nextcloud.conf](2020-08-30-14-15-28.png)
+Then, restart nginx using sudo systemctl restart nginx.service
