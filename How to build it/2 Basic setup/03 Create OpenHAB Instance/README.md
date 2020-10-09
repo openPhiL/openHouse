@@ -64,6 +64,17 @@ and you can access openhab using http(s)://10.0.1.2 (without the port 8080)
 
 ## Others
 
+### Transformation Maps
+
+if working with different vendors, same ideas have different notations. this is a collection of transformation map files to put in /transform:
+
+binary.map :
+
+    1=ON
+    0=OFF
+    ON=1
+    OFF=0
+
 ### Autostart with proxmox
 
 Remember to setup Proxmox to start Openhab automatically with the proxmox host. See the "Composite Setup" Section of this repository for details
