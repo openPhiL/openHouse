@@ -24,8 +24,9 @@ Check the [github repository](https://github.com/zfsonlinux/zfs-auto-snapshot)
     TAG="zfs-auto-snap_daily"
     PROP="zfs:backup"
     REMUSER="root"
-    REMHOST="10.0.2.11"
+    REMHOST="10.0.2.11" #the target system for your backups
     REMPOOL="rpool"
+    
     run ./zfs-backup.sh -vn to see if it works
 
 ## Manual setup of Snapshots
@@ -35,3 +36,8 @@ You can create Snapshots of any container/VM by clicking on the Snapshot button 
 ## Manual setup of Backups
 
 You can create backup jobs in proxmox WebGui -> Datacenter -> Backup. You can backup to an SMB server. If you backup to the SMB Server on the same proxmox host (FileServer Instance), make sure you backup that FileServer to a seperate machine as well.
+
+
+##todo: 
+wenn es nicht existiert:  zfs send -R rpool/data/subvol-107-disk-0@zfs-auto-snap_daily-2020-10-30-1437 | ssh root@10.0.2.11 zfs recv -dvF rpool
+zum aktualisieren:  zfs send -I zfs-auto-snap_daily-2020-10-30-1437 -R rpool/data/subvol-107-disk-0@zfs-auto-snap_daily-2020-10-30-1508 | ssh root@10.0.2.11 zfs recv -dvF rpool
