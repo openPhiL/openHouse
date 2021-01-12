@@ -19,7 +19,9 @@ With the MAC address of your created Network, you can go to OPNSense WebGUI -> S
 
 Once we logged into the newly created Ubuntu container, update everything:
 
-    update all packages with the command *sudo apt-get update && sudo apt-get upgrade -y* 
+update all packages with the command 
+
+    sudo apt-get update && sudo apt-get upgrade -y
 
 ### Add a user
 
@@ -33,11 +35,13 @@ if the username equals your windows user, you can ssh into the system more easy.
 
 you don't need username and passwords to ssh into this server if a user exists with the same name as your windows user and if your ssh-id/key is known to the server. We can simply copy it using:
 
-    scp .ssh/id_rsa.pub root@<ip_of_instance>:~/.ssh/authorized_keys
+    scp .ssh/id_rsa.pub phil@<ip_of_instance>:~/.ssh/authorized_keys
 
 ## Install OpenHAB
 
 Then, follow those [instructions](https://www.openhab.org/docs/installation/openhabian.html#other-linux-systems-add-openhabian-just-like-any-other-software)
+
+I had to install "apt install gnupg" before the installation ended successfull.
 
 Once started, you will have to make a selection of packages. Use Standard, not Simple.
 
