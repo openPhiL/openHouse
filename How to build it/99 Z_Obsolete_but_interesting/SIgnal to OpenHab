@@ -1,0 +1,17 @@
+signal-cli --output=json receive | jq 'select(.envelope.dataMessage.groupInfo.groupId == "tHZ++if76Aps=" or .envelope.syncMessage.sentMessage.groupInfo.groupId == "tHZ+76Aps=") | select(.envelope.sourceNumber=="+49160xxx" or .envelope.sourceNumber=="+49160xxx").envelope | {sourceNumber: .sourceNumber, text: .dataMessage.message, text2: .syncMessage.sentMessage.message } | join(";")' | python3 signal_receive.py
+
+
+
+import sys
+import os
+import time
+
+data = sys.stdin.readlines()
+for line in data:
+        line = line.replace('"','') # text is surrounded with " 
+        line = line.replace(';;',';') # the text might be in two different ares
+        input = line.split(";")
+        os.system('mosquitto_pub -h 10.0.1.8 -p 1883 --retain --topic signal/message -m "' + input[1].strip() + '"' )
+        os.system('mosquitto_pub -h 10.0.1.8 -p 1883 --retain --topic signal/user -m "' + input[0][3:] + '"' )
+        time.sleep(10)
+

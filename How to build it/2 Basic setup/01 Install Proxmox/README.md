@@ -14,24 +14,19 @@ Proxmox is the main operation system of the host that runs all other server by s
 
 5) choose your IP wisely (but you can change that later if you need)
 
+## Enable Networking
+in my case, i have 2 NICs, one for LAN and one WAN. 
+Per Default, only one is active. That is my LAN. 
+To enable WAN, I added a new linux bridge (vmbr1) that I linked to the free NIC (e.g. enp2s0)
+
 ## Enable updates
 
-change the source list
+The menu menu updates is to deactivate the enterprise-reposiory and add the no-subscription repository. then update. 
 
-    nano /etc/apt/sources.list
+## Enable ZFS snapshots
+install zfs-auto-snapshot
 
-and add the following line:
+    https://github.com/zfsonlinux/zfs-auto-snapshot
 
-    deb http://download.proxmox.com/debian buster pve-no-subscription
+that will place cron-files in the /etc/cron* directories . in there, you can define what you when you want to snap and how many you want to keep. 
 
-then change the enterprise.list
-
-    nano /etc/apt/sources.list.d/pve-enterprise.list
-
-and comment out the line:
-
-    deb https://enterprise.proxmox.com/debian buster pve-enterprise
-
-Now you can update:
-
-    apt update && apt dist-upgrade -y

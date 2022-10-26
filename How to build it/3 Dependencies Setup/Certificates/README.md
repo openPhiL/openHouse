@@ -5,11 +5,15 @@ At the end, we will use it to communicate via https to our servers and we will u
 
 A good documentation is available [here](https://docs.opnsense.org/manual/how-tos/self-signed-chain.html).
 
+I use Opnsense to create the CA and the Intermediate for that CA. 
+
 ## How to implement them
 
 ### Proxmox
-
-TODO
+Create an "Server"-Certificate for the Proxmox Server. 
+export the CA.cert, the Intermediate.cert and that Server Certificate as well as the server certificate private key. 
+in Proxmox-Node-Certificates, press "upload a custom certificate" and copy&paste the Cert contents in the chain text box, starting with CA, then Intermediate, then Proxmox. Put the Key in the Key-Textbox. It will restart. 
+If you broke it, delete the /etc/pve/local/pveproxy-ssl.pem file.
 
 ### for VMWare Hypervisor
 
@@ -17,16 +21,29 @@ Go to the VMware Hypervisors Webinterface->manager->security->certificates and i
 
 ### in OPNSense
 
-in the Webgui -> System -> Settings -> Administration
+Create an "Server"-Certificate for the OPNsense Server. 
+in the Webgui -> System -> Settings -> Administration and selec that. 
 
 ### OPENHAB
 
+Create an "Server"-Certificate for the openHAB Server. 
 Copy the content of your key and cert (downloaded from the pfsense Cert Manager ) into the files /etc/ssl/certs folder, overwriting existing openhab.cert and openhab.key files.
 Then, restart nginx using sudo systemctl restart nginx.service
 
 ### UnifiController
 
-There is this [website](https://help.ui.com/hc/en-us/articles/212500127-UniFi-SSL-certificate-error-upon-opening-controller-page) but I didn't get it to work .
+
+Create an "Server"-Certificate for the UnifiController.
+Export the crt & key combination in .p12 format, set the passwort to "aircontrolenterprise" (which is the default of the initial UnifiController, yes, haha).
+login root to Unifi Controller 
+
+    mv /var/lib/unifi/keystore to /var/lib/unifi/keystore.backup
+
+    keytool -importkeystore -destkeystore /var/lib/unifi/keystore -srckeystore UnifiController.p12 -srcstoretype PKCS12
+
+when asked for password, use aircontrolenterprise. 
+
+restart with service unifi restart
 
 ### Nextcloud
 

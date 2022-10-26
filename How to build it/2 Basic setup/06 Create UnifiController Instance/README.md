@@ -21,7 +21,9 @@ With the MAC address of your created Network, you can go to OPNSense WebGUI -> S
 
 Once we logged into the newly created Ubuntu container, update everything:
 
-    update all packages with the command *sudo apt-get update && sudo apt-get upgrade -y* 
+update all packages with the command 
+
+    sudo apt-get update && sudo apt-get upgrade -y* 
 
 ### Add a user
 
